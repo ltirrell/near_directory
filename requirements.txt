@@ -1,0 +1,9 @@
+altair
+numpy
+pandas
+Pillow
+requests
+scikit-learn
+scipy
+shroomdk
+streamlit

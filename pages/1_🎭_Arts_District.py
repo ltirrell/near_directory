@@ -146,7 +146,7 @@ def alt_line_chart(
         color=alt.Color(
             "variable:N",
             sort=columns,
-            scale=alt.Scale(domain=columns, range=["black", "#2eab9c", "magenta"]),
+            scale=alt.Scale(domain=columns, range=["#404347", "#2eab9c", "magenta"]),
         ),
         # order=alt.Order(columns)
         opacity=alt.value(0.6),

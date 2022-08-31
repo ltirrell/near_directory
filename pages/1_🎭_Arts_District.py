@@ -432,21 +432,22 @@ except:
     st.text(f"Error processing '{col_id}', try again with a different collection!")
 
 query = f"""
+--sql
 with TX AS (
     SELECT
         blocK_timestamp,
-        txn_hash,
+        tx_hash,
         tx :receipt as receipt,
         tx :public_key as public_key,
         tx :signer_id as signer_id,
-        tx :receiver_id as receiver_id --,action_data:deposit/pow(10,24) as deposit, action_data:gas/pow(10,24) as gas*/
+        tx :receiver_id as receiver_id
     FROM
-        flipside_prod_db.mdao_near.transactions -- WHERE txn_hash = 'AS5QLqtdQKz4fGZeqtBgXHhLbkA1HpVCM4fRaSoBqK5y' -- sale https://paras.id/token/x.paras.near::426086
+        near.core.fact_transactions
 ),
 JSON_PARSING AS (
     SELECT
         block_timestamp,
-        txn_hash,
+        tx_hash,
         public_key,
         signer_id,
         receiver_id,
@@ -465,7 +466,7 @@ nft_tx_log AS (
     SELECT
         --PARSE_JSON(LOGS):PARAMS
         block_timestamp,
-        txn_hash,
+        tx_hash,
         public_key,
         signer_id,
         receiver_id,
@@ -490,7 +491,7 @@ SELECT
     date_trunc('day', block_timestamp :: date) as datetime,
     avg(NEAR) as average_sale_NEAR,
     sum(NEAR) as total_sale_NEAR,
-    count(txn_hash) as total_tx,
+    count(tx_hash) as total_tx,
     min(NEAR) as cheapest_NFT,
     max(NEAR) as most_expensive_NFT
 FROM
@@ -502,6 +503,7 @@ where
     and is_auction is NULL
 group by
     datetime
+;
 """
 data_load_state = st.text(
     "Loading data from Flipside... this will take several minutes unless the collection is cached"
@@ -509,11 +511,11 @@ data_load_state = st.text(
 sdk = ShroomDK(API_KEY)
 # HACK: problem with loading data, so precomputing these here:
 if col_id == "secretskelliessociety.near":
-    df = pd.read_csv("near/skellies.csv")
+    df = pd.read_csv("near/art/skellies.csv")
 elif col_id == "nearnautnft.near":
-    df = pd.read_csv("near/nearnauts.csv")
+    df = pd.read_csv("near/art/nearnauts.csv")
 elif col_id == "asac.near":
-    df = pd.read_csv("near/asac.csv")
+    df = pd.read_csv("near/art/asac.csv")
 else:
     try:
         df = get_flipside_data(query, cached=True)

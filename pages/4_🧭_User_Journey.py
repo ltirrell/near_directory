@@ -459,7 +459,7 @@ c2.metric(
 )
 c2.metric(
     "NEAR average daily transaction count per user, from active users",
-    f"{int(mean_90d_tx.active_users_tx['NEAR']):,}",
+    f"{int(mean_90d_tx_per_user.tx_per_active_users['NEAR']):,}",
 )
 c2.metric(
     "NEAR average daily transaction count (past 30d)",

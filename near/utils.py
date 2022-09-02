@@ -55,7 +55,7 @@ query_information = {
 }
 
 
-@st.cache(ttl=(60 * 30))
+@st.cache(ttl=(60 * 10))
 def load_data(
     query_information: Mapping[str, Mapping[str, str]] = query_information
 ) -> pd.DataFrame:

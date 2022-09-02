@@ -302,7 +302,7 @@ st.write(
     f"""
 We want examine how users interact with the [**NEAR** blockchain](https://near.org/) and compare it to usage of several other popular blockchains:
 - Ethereum
-- Solana (only looking at the past 30 days)
+- Solana
 - Algorand
 - Polygon
 

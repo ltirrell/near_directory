@@ -388,14 +388,17 @@ Explore the most popular collection, or enter one that you want to view below.
 
 We can see the average, most expensive, and cheapest NFT sales each day, as well as the sales volume for the collection (in NEAR and number of transactions).
 
-Try some popular NFT collections such as:
-- secretskelliessociety.near (Secret Skellies Society)
-- nearnautnft.near (NEARNauts)
+This will take some time to run, so results are cached for some of the more popular NFT collections:
 - asac.near (Antisocial Ape Club)
+- nearnautnft.near (NEARNauts)
+- secretskelliessociety.near (Secret Skellies Society)
+
+Use the checkbox to recompute latest results for one of these cached collectsions.
 """
 )
-
-col_id = st.text_input("Collection ID", "secretskelliessociety.near")
+c1,c2 = st.columns(2)
+col_id = c1.text_input("Collection ID", "asac.near")
+update_cache = c2.checkbox("Recompute latest data?")
 try:
     r = requests.get(
         "https://api-v2-mainnet.paras.id/collections",
@@ -510,11 +513,11 @@ data_load_state = st.text(
 )
 sdk = ShroomDK(API_KEY)
 # HACK: problem with loading data, so precomputing these here:
-if col_id == "secretskelliessociety.near":
+if col_id == "secretskelliessociety.near" and not update_cache:
     df = pd.read_csv("near/art/skellies.csv")
-elif col_id == "nearnautnft.near":
+elif col_id == "nearnautnft.near" and not update_cache:
     df = pd.read_csv("near/art/nearnauts.csv")
-elif col_id == "asac.near":
+elif col_id == "asac.near" and not update_cache:
     df = pd.read_csv("near/art/asac.csv")
 else:
     try:

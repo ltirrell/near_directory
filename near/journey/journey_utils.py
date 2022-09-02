@@ -18,7 +18,7 @@ __all__ = [
     "alt_date_area",
     "alt_ordered_bar_receiver",
     "alt_ordered_bar_sender",
-    "alt_bar_interactions"
+    "alt_bar_interactions",
 ]
 
 

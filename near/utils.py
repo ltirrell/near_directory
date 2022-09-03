@@ -5,12 +5,14 @@ from collections.abc import Mapping
 import altair as alt
 import pandas as pd
 import streamlit as st
+from shroomdk import ShroomDK
 
 __all__ = [
     # Variables/info/schema
     "shroomdk_key",
     "figment_key",
     "query_information",
+    "get_user_query",
     # Data
     "load_data",
     # Charting
@@ -53,6 +55,29 @@ query_information = {
         "blockchain": "Algorand",
     },
 }
+
+
+sdk = ShroomDK(shroomdk_key)
+
+
+@st.cache(ttl=12 * 60)
+def get_user_query(
+    address,
+    cached=True,
+):
+    base_query = """--sql
+select
+    *
+from
+    near.core.fact_transactions
+where
+    tx_signer = '{user}'
+;
+    """
+    q = base_query.format(user=address)
+    query_result_set = sdk.query(q, cached=cached)
+    df = pd.DataFrame(query_result_set.rows, columns=query_result_set.columns)
+    return df
 
 
 @st.cache(ttl=(60 * 10))

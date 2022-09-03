@@ -10,7 +10,9 @@ import streamlit as st
 from PIL import Image
 
 
-st.set_page_config(page_title="Citizens of NEAR: Arts District", page_icon="🌆",  layout="wide")
+st.set_page_config(
+    page_title="Citizens of NEAR: Arts District", page_icon="🌆", layout="wide"
+)
 st.title("Citizens of NEAR: Arts District")
 st.caption(
     """
@@ -41,7 +43,13 @@ def load_data():
     top_projects_df = pd.read_json(
         "https://node-api.flipsidecrypto.com/api/v2/queries/89c38bbf-9c3b-41d1-a92e-b12d4bdce055/data/latest"
     )
-    return sales_volume_df, top_projects_df
+    past_week_df = pd.read_json(
+        "https://node-api.flipsidecrypto.com/api/v2/queries/b14104c2-fc26-44fb-9be9-6573b3cf2c00/data/latest"
+    )
+    top_sales_df = pd.read_json(
+        "https://node-api.flipsidecrypto.com/api/v2/queries/a35024bd-71b9-4548-a121-c284c2140fdb/data/latest"
+    )
+    return sales_volume_df, top_projects_df, past_week_df, top_sales_df
 
 
 def get_random_collections(n=10, max_num=34270) -> list:
@@ -174,6 +182,7 @@ def alt_line_chart(
 
     return chart.interactive().properties(width=1000)
 
+
 with st.expander("Methods"):
     st.header("Methods")
     """
@@ -182,14 +191,16 @@ with st.expander("Methods"):
     The interactive query used for this dashboard can be found [here](https://github.com/ltirrell/flipside_bounties/blob/main/near/arts_district.py#L435), where `col_id` is replaced with the value given by the user.
 
     The [top NFT projects](https://app.flipsidecrypto.com/velocity/queries/89c38bbf-9c3b-41d1-a92e-b12d4bdce055) and [overall sales volume](https://app.flipsidecrypto.com/velocity/queries/6ae95685-436d-4682-8d8b-dec364692ed9) are updated every 12 hours on Flipside, and are again borrowed from @pinehearst_'s [excellent work](https://app.flipsidecrypto.com/dashboard/near-arts-district-m8p1bd).
+
+    The [top NFT projects in the last 7 days](https://app.flipsidecrypto.com/velocity/queries/b14104c2-fc26-44fb-9be9-6573b3cf2c00) and [most expensive NFT sales](https://app.flipsidecrypto.com/velocity/queries/a35024bd-71b9-4548-a121-c284c2140fdb) are adapted from Discord user `Kaskoazul#4557`'s [dashboard](https://app.flipsidecrypto.com/dashboard/city-of-near-the-arts-district-3nBdeQ)
     """
 
 
 st.header("What's happening on NEAR?")
 st.write(
-    "Below is the weekly sale volume of NFTs on Near, showing number of sellers, buyers, total sales count and daily volume in NEAR. Sales began to pick up in January 2022, and were quite popular until May 2022, when sales dipped with a market downturn."
+    "Below is the weekly sale volume of NFTs on NEAR, showing number of sellers, buyers, total sales count and daily volume in NEAR. Sales began to pick up in January 2022, and were quite popular until May 2022, when sales dipped with a market downturn."
 )
-sales_volume_df, top_projects_df = load_data()
+sales_volume_df, top_projects_df, past_week_df, top_sales_df = load_data()
 
 bars = (
     alt.Chart(
@@ -263,6 +274,19 @@ vol_chart = (
 
 st.altair_chart(vol_chart, use_container_width=True)
 
+st.write("The top 50 most expensive NFT sales are shown here, to get an overview of some projects generating the most attention. Most large sales occurred before the May market downturn.")
+chart = alt.Chart(top_sales_df).mark_circle(size=50).encode(
+    x=alt.X("yearmonthdate(DATETIME)", title=None),
+    y=alt.Y("PRICE", title="Price (NEAR)"),
+    color=alt.Color("PROJECT", title="NFT Collection"),
+    tooltip=[
+        alt.Tooltip("yearmonthdate(DATETIME)", title="Sales Date"),
+        alt.Tooltip("PROJECT", title="NFT Collection"),
+        alt.Tooltip("NFT", title="NFT ID"),
+        alt.Tooltip("PRICE", title="Price (NEAR)")
+    ]
+).interactive().properties(height=500)
+st.altair_chart(chart, use_container_width=True)
 st.header("The hottest place for art: Paras")
 f"""
 [Paras](https://paras.id/) is the most popular NFT marketplace on NEAR. Let's take a look at what it has to offer.
@@ -328,6 +352,8 @@ We've seen some random collections, let's look at the ones that attract the most
 The top projects by volume are shown here:
 """
 )
+c1, c2 = st.columns([1, 3])
+vol_type = c1.selectbox("Choose volume type:", ["Sales (NEAR)", "Number of sales"])
 sales_vol = (
     alt.Chart(top_projects_df)
     .mark_bar(width=18)
@@ -357,7 +383,7 @@ sales_vol = (
             alt.Tooltip("Sellers"),
         ],
     )
-).interactive()
+).interactive().properties(height=500)
 near_vol = (
     alt.Chart(top_projects_df)
     .mark_bar(width=18)
@@ -389,16 +415,22 @@ near_vol = (
             alt.Tooltip("Sellers"),
         ],
     )
-).interactive()
-st.altair_chart(near_vol & sales_vol, use_container_width=True)
+).interactive().properties(height=500)
+if vol_type == "Sales (NEAR)":
+    chart = near_vol
+elif vol_type == "Number of sales":
+    chart = sales_vol
+st.altair_chart(chart, use_container_width=True)
 
 st.write(
     """
-Now we we can take a self-guided tour, taking a look at some collections in more detail!
-Explore the most popular collection, or enter one that you want to view below.
-
-We can see the average, most expensive, and cheapest NFT sales each day, as well as the sales volume for the collection (in NEAR and number of transactions).
-
+Now we we can take a self-guided tour, taking a look at some collections in more detail! We can see the average, most expensive, and cheapest NFT sales each day, as well as the sales volume for the collection (in NEAR and number of transactions). The most popular collections from the last 7 days are here:
+"""
+)
+st.write(past_week_df)
+st.write(
+"""
+Enter the `NFT_CONTRACT_ID` for the collection you want to see in the text box below.
 This will take some time to run, so results are cached for some of the more popular NFT collections:
 - asac.near (Antisocial Ape Club)
 - nearnautnft.near (NEARNauts)
@@ -407,7 +439,7 @@ This will take some time to run, so results are cached for some of the more popu
 Use the checkbox to gather the latests results for one of these cached collections.
 """
 )
-c1,c2 = st.columns(2)
+c1, c2 = st.columns(2)
 col_id = c1.text_input("Collection ID", "asac.near")
 update_cache = c2.checkbox("Update data?")
 try:
@@ -426,15 +458,15 @@ try:
     try:
         r = requests.get(f"https://ipfs.fleek.co/ipfs/{collection_data['media']}")
         image = Image.open(io.BytesIO(r.content))
-        st.image(image)
+        c2.image(image)
     except:
         pass
-    st.subheader(f"{collection_data['collection']}")
+    c1.subheader(f"{collection_data['collection']}")
     try:
-        st.caption(collection_data["description"])
+        c1.caption(collection_data["description"])
     except:
         pass
-    st.write(
+    c1.write(
         f"""
     - **Creator:** {creator}
     - [**View on Paras**](https://paras.id/collection/{collection_data['collection_id']})
@@ -443,7 +475,7 @@ try:
     """
     )
 except:
-    st.text(f"Error processing '{col_id}', try again with a different collection!")
+    c1.text(f"Error processing '{col_id}', try again with a different collection!")
 
 query = f"""
 --sql
@@ -556,9 +588,9 @@ sale_df = df[
     ]
 ].melt(id_vars=["DATETIME"])
 
-
-chart = alt_line_chart(sale_df)
-st.altair_chart(chart, use_container_width=True)
+c1, c2 = st.columns(2)
+chart = alt_line_chart(sale_df).properties(height=500)
+c1.altair_chart(chart, use_container_width=True)
 
 chart1 = (
     alt.Chart(
@@ -579,7 +611,7 @@ chart1 = (
         ],
     )
     .interactive()
-    .properties(width=1000)
+    .properties(height=500)
 )
 
 chart2 = (
@@ -600,9 +632,8 @@ chart2 = (
         ],
     )
     .interactive()
-    .properties(width=1000)
+    .properties(height=500)
 )
-st.altair_chart(
+c2.altair_chart(
     alt.layer(chart1, chart2).resolve_scale(y="independent"), use_container_width=True
 )
-

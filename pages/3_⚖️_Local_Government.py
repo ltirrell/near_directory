@@ -1,16 +1,15 @@
 import pandas as pd
 import streamlit as st
 from dateutil import parser
+from near.gov import *
 from scipy.stats import spearmanr
 from shroomdk import errors
 
-from near.gov import *
-
 st.set_page_config(
-    page_title="Citizens of NEAR: Local Government", page_icon="🌆", layout="wide"
+    page_title="NEAR Directory - Local Government", page_icon="🌆", layout="wide"
 )
 
-st.title("Citizens of NEAR: Local Government")
+st.title("NEAR Directory: Local Government")
 st.caption(
     """
 Every city has its governors, and NEAR as ran by its validators.

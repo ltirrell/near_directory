@@ -1,19 +1,18 @@
 import datetime
 
 import altair as alt
+import near.utils
 import pandas as pd
 import streamlit as st
-
-import near.utils
 from near.journey import *
 
 alt.data_transformers.disable_max_rows()
 
 st.set_page_config(
-    page_title="Citizens of NEAR: The Journeymen", page_icon="🌆", layout="wide"
+    page_title="NEAR Directory - User Journey", page_icon="🌆", layout="wide"
 )
 
-st.title("Citizens of NEAR: The Journeymen")
+st.title("NEAR Directory - User Journey")
 st.caption(
     """
 It's all about the journey, not the destination. Investigating the NEAR User jouney

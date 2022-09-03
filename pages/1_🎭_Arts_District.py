@@ -5,15 +5,14 @@ import random
 import altair as alt
 import pandas as pd
 import requests
-from shroomdk import ShroomDK, errors
 import streamlit as st
 from PIL import Image
-
+from shroomdk import ShroomDK, errors
 
 st.set_page_config(
-    page_title="Citizens of NEAR: Arts District", page_icon="🌆", layout="wide"
+    page_title="NEAR Directory - Arts District", page_icon="🌆", layout="wide"
 )
-st.title("Citizens of NEAR: Arts District")
+st.title("NEAR Directory: Arts District")
 st.caption(
     """
 What is a city without a thriving center for arts and culture?!
@@ -274,18 +273,26 @@ vol_chart = (
 
 st.altair_chart(vol_chart, use_container_width=True)
 
-st.write("The top 50 most expensive NFT sales are shown here, to get an overview of some projects generating the most attention. Most large sales occurred before the May market downturn.")
-chart = alt.Chart(top_sales_df).mark_circle(size=50).encode(
-    x=alt.X("yearmonthdate(DATETIME)", title=None),
-    y=alt.Y("PRICE", title="Price (NEAR)"),
-    color=alt.Color("PROJECT", title="NFT Collection"),
-    tooltip=[
-        alt.Tooltip("yearmonthdate(DATETIME)", title="Sales Date"),
-        alt.Tooltip("PROJECT", title="NFT Collection"),
-        alt.Tooltip("NFT", title="NFT ID"),
-        alt.Tooltip("PRICE", title="Price (NEAR)")
-    ]
-).interactive().properties(height=500)
+st.write(
+    "The top 50 most expensive NFT sales are shown here, to get an overview of some projects generating the most attention. Most large sales occurred before the May market downturn."
+)
+chart = (
+    alt.Chart(top_sales_df)
+    .mark_circle(size=50)
+    .encode(
+        x=alt.X("yearmonthdate(DATETIME)", title=None),
+        y=alt.Y("PRICE", title="Price (NEAR)"),
+        color=alt.Color("PROJECT", title="NFT Collection"),
+        tooltip=[
+            alt.Tooltip("yearmonthdate(DATETIME)", title="Sales Date"),
+            alt.Tooltip("PROJECT", title="NFT Collection"),
+            alt.Tooltip("NFT", title="NFT ID"),
+            alt.Tooltip("PRICE", title="Price (NEAR)"),
+        ],
+    )
+    .interactive()
+    .properties(height=500)
+)
 st.altair_chart(chart, use_container_width=True)
 st.header("The hottest place for art: Paras")
 f"""
@@ -355,67 +362,75 @@ The top projects by volume are shown here:
 c1, c2 = st.columns([1, 3])
 vol_type = c1.selectbox("Choose volume type:", ["Sales (NEAR)", "Number of sales"])
 sales_vol = (
-    alt.Chart(top_projects_df)
-    .mark_bar(width=18)
-    .transform_fold(fold=["Sales Count"], as_=["variable", "value"])
-    .transform_window(
-        rank="rank(value)", sort=[alt.SortField("value", order="descending")]
-    )
-    .transform_filter(alt.datum.rank <= 40)
-    .encode(
-        x=alt.X("NFT Collection", axis=alt.Axis(title=""), sort="-y"),
-        y=alt.Y(
-            "value:Q",
-            title="Sales Count",
-        ),
-        color=alt.Color(
-            "NFT Collection:N",
-            sort=alt.EncodingSortField("value", op="max", order="descending"),
-            scale=alt.Scale(
-                scheme="tableau20",
+    (
+        alt.Chart(top_projects_df)
+        .mark_bar(width=18)
+        .transform_fold(fold=["Sales Count"], as_=["variable", "value"])
+        .transform_window(
+            rank="rank(value)", sort=[alt.SortField("value", order="descending")]
+        )
+        .transform_filter(alt.datum.rank <= 40)
+        .encode(
+            x=alt.X("NFT Collection", axis=alt.Axis(title=""), sort="-y"),
+            y=alt.Y(
+                "value:Q",
+                title="Sales Count",
             ),
-        ),
-        tooltip=[
-            alt.Tooltip("NFT Collection", title="Collection Name"),
-            alt.Tooltip("Total Volume (NEAR)", format=",.1f"),
-            alt.Tooltip("Sales Count"),
-            alt.Tooltip("Buyers"),
-            alt.Tooltip("Sellers"),
-        ],
+            color=alt.Color(
+                "NFT Collection:N",
+                sort=alt.EncodingSortField("value", op="max", order="descending"),
+                scale=alt.Scale(
+                    scheme="tableau20",
+                ),
+            ),
+            tooltip=[
+                alt.Tooltip("NFT Collection", title="Collection Name"),
+                alt.Tooltip("Total Volume (NEAR)", format=",.1f"),
+                alt.Tooltip("Sales Count"),
+                alt.Tooltip("Buyers"),
+                alt.Tooltip("Sellers"),
+            ],
+        )
     )
-).interactive().properties(height=500)
+    .interactive()
+    .properties(height=500)
+)
 near_vol = (
-    alt.Chart(top_projects_df)
-    .mark_bar(width=18)
-    .transform_fold(
-        fold=[
-            "Total Volume (NEAR)",
-        ],
-        as_=["variable", "value"],
-    )
-    .transform_window(
-        rank="rank(value)", sort=[alt.SortField("value", order="descending")]
-    )
-    .transform_filter(alt.datum.rank <= 40)
-    .encode(
-        x=alt.X("NFT Collection", axis=alt.Axis(title=""), sort="-y"),
-        y=alt.Y("value:Q", title="Sales Volume (NEAR)"),
-        color=alt.Color(
-            "NFT Collection:N",
-            sort=alt.EncodingSortField("value", op="max", order="descending"),
-            scale=alt.Scale(
-                scheme="tableau20",
+    (
+        alt.Chart(top_projects_df)
+        .mark_bar(width=18)
+        .transform_fold(
+            fold=[
+                "Total Volume (NEAR)",
+            ],
+            as_=["variable", "value"],
+        )
+        .transform_window(
+            rank="rank(value)", sort=[alt.SortField("value", order="descending")]
+        )
+        .transform_filter(alt.datum.rank <= 40)
+        .encode(
+            x=alt.X("NFT Collection", axis=alt.Axis(title=""), sort="-y"),
+            y=alt.Y("value:Q", title="Sales Volume (NEAR)"),
+            color=alt.Color(
+                "NFT Collection:N",
+                sort=alt.EncodingSortField("value", op="max", order="descending"),
+                scale=alt.Scale(
+                    scheme="tableau20",
+                ),
             ),
-        ),
-        tooltip=[
-            alt.Tooltip("NFT Collection", title="Collection Name"),
-            alt.Tooltip("Total Volume (NEAR)", format=",.1f"),
-            alt.Tooltip("Sales Count"),
-            alt.Tooltip("Buyers"),
-            alt.Tooltip("Sellers"),
-        ],
+            tooltip=[
+                alt.Tooltip("NFT Collection", title="Collection Name"),
+                alt.Tooltip("Total Volume (NEAR)", format=",.1f"),
+                alt.Tooltip("Sales Count"),
+                alt.Tooltip("Buyers"),
+                alt.Tooltip("Sellers"),
+            ],
+        )
     )
-).interactive().properties(height=500)
+    .interactive()
+    .properties(height=500)
+)
 if vol_type == "Sales (NEAR)":
     chart = near_vol
 elif vol_type == "Number of sales":
@@ -429,7 +444,7 @@ Now we we can take a self-guided tour, taking a look at some collections in more
 )
 st.write(past_week_df)
 st.write(
-"""
+    """
 Enter the `NFT_CONTRACT_ID` for the collection you want to see in the text box below.
 This will take some time to run, so results are cached for some of the more popular NFT collections:
 - asac.near (Antisocial Ape Club)

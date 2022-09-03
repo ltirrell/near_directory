@@ -2,7 +2,6 @@ import streamlit as st
 
 from near.utils import get_user_query
 
-
 st.set_page_config(
     page_title="NEAR Directory - Your guide to the City of NEAR",
     page_icon="🌆",

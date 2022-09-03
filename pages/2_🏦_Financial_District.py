@@ -2,14 +2,13 @@ from functools import partial
 
 import pandas as pd
 import streamlit as st
-
 from near.finance import *
 
 st.set_page_config(
-    page_title="Citizens of NEAR: Financial District", page_icon="🌆", layout="wide"
+    page_title="NEAR Directory - Financial District", page_icon="🌆", layout="wide"
 )
 
-st.title("Citizens of NEAR: Financial District")
+st.title("NEAR Directory: Financial District")
 st.caption(
     """
 Investigating the *de facto* Central Bank within the NEAR ecosystem, and current stablecoin holders.

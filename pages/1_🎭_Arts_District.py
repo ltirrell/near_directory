@@ -10,7 +10,7 @@ import streamlit as st
 from PIL import Image
 
 
-st.set_page_config(page_title="Citizens of NEAR: Arts District", page_icon="🌆")
+st.set_page_config(page_title="Citizens of NEAR: Arts District", page_icon="🌆",  layout="wide")
 st.title("Citizens of NEAR: Arts District")
 st.caption(
     """
@@ -19,6 +19,7 @@ What is a city without a thriving center for arts and culture?!
 Exploring the NEAR NFT scene.
 """
 )
+
 
 API_KEY = os.getenv("SHROOMDK_KEY")
 
@@ -173,6 +174,16 @@ def alt_line_chart(
 
     return chart.interactive().properties(width=1000)
 
+with st.expander("Methods"):
+    st.header("Methods")
+    """
+    Data was gathered using the [Paras API](https://parashq.github.io/) and Flipside Crypto, based off of this [query](https://app.flipsidecrypto.com/velocity/queries/b4781971-7539-41ef-9c1e-4af08afb79de) from [@pinehearst_](https://twitter.com/pinehearst_).
+
+    The interactive query used for this dashboard can be found [here](https://github.com/ltirrell/flipside_bounties/blob/main/near/arts_district.py#L435), where `col_id` is replaced with the value given by the user.
+
+    The [top NFT projects](https://app.flipsidecrypto.com/velocity/queries/89c38bbf-9c3b-41d1-a92e-b12d4bdce055) and [overall sales volume](https://app.flipsidecrypto.com/velocity/queries/6ae95685-436d-4682-8d8b-dec364692ed9) are updated every 12 hours on Flipside, and are again borrowed from @pinehearst_'s [excellent work](https://app.flipsidecrypto.com/dashboard/near-arts-district-m8p1bd).
+    """
+
 
 st.header("What's happening on NEAR?")
 st.write(
@@ -210,7 +221,7 @@ lines = (
     alt.Chart(
         sales_volume_df,
     )
-    .mark_line(color="black")
+    .mark_line()
     .transform_fold(
         fold=[
             "Daily Volume (NEAR)",
@@ -229,7 +240,7 @@ lines = (
             scale=alt.Scale(
                 domain=["Daily Volume (NEAR)"],
                 range=[
-                    "black",
+                    "#474746",
                 ],
             ),
         ),
@@ -393,12 +404,12 @@ This will take some time to run, so results are cached for some of the more popu
 - nearnautnft.near (NEARNauts)
 - secretskelliessociety.near (Secret Skellies Society)
 
-Use the checkbox to recompute latest results for one of these cached collectsions.
+Use the checkbox to gather the latests results for one of these cached collections.
 """
 )
 c1,c2 = st.columns(2)
 col_id = c1.text_input("Collection ID", "asac.near")
-update_cache = c2.checkbox("Recompute latest data?")
+update_cache = c2.checkbox("Update data?")
 try:
     r = requests.get(
         "https://api-v2-mainnet.paras.id/collections",
@@ -595,11 +606,3 @@ st.altair_chart(
     alt.layer(chart1, chart2).resolve_scale(y="independent"), use_container_width=True
 )
 
-st.header("Methods")
-"""
-Data was gathered using the [Paras API](https://parashq.github.io/) and Flipside Crypto, based off of this [query](https://app.flipsidecrypto.com/velocity/queries/b4781971-7539-41ef-9c1e-4af08afb79de) from [@pinehearst_](https://twitter.com/pinehearst_).
-
-The interactive query used for this dashboard can be found [here](https://github.com/ltirrell/flipside_bounties/blob/main/near/arts_district.py#L435), where `col_id` is replaced with the value given by the user.
-
-The [top NFT projects](https://app.flipsidecrypto.com/velocity/queries/89c38bbf-9c3b-41d1-a92e-b12d4bdce055) and [overall sales volume](https://app.flipsidecrypto.com/velocity/queries/6ae95685-436d-4682-8d8b-dec364692ed9) are updated every 12 hours on Flipside, and are again borrowed from @pinehearst_'s [excellent work](https://app.flipsidecrypto.com/dashboard/near-arts-district-m8p1bd).
-"""

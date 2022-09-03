@@ -268,13 +268,15 @@ else:
         key="pool_deposits_date",
     )
 
-
-c2.altair_chart(
-    alt_pool_liquidity(
-        deposit_withdraws_subset, analysis_type, metric, grouping, date_range, selection
-    ),
-    use_container_width=True,
-)
+try:
+    c2.altair_chart(
+        alt_pool_liquidity(
+            deposit_withdraws_subset, analysis_type, metric, grouping, date_range, selection
+        ),
+        use_container_width=True,
+    )
+except ValueError:
+    st.write("Data isn't available for this date range (pool may be closed). Try using `All dates`.")
 
 
 st.subheader("Token prices")

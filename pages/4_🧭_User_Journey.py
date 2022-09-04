@@ -93,6 +93,9 @@ st.header("Crossing the Rainbow Bridge")
 st.write(
     "NEAR users often begin their journey by crossing the [Rainbow Bridge](https://rainbowbridge.app/transfer), moving assets from Ethereum onto the NEAR blockchain. We'll investigate what these users did once their assets are in NEAR, and analyze the source of these transactions from Ethereum."
 )
+st.write(
+    "Use the dropdown menu to select which metric you would like to view for each chart in this section."
+)
 rainbow = fs_data["rainbow"].copy()
 rainbow = rainbow.replace("nan", pd.NA)
 rainbow["NUMBER_OF_BRIDGE_TX"] = pd.to_numeric(rainbow["NUMBER_OF_BRIDGE_TX"])
@@ -175,7 +178,7 @@ c1.altair_chart(
 
 
 st.write(
-    "We can look at the same metriics for Rainbow Bridge senders. Because we have the latest account balance of the senders, the [Gini coeffecient](https://github.com/oliviaguest/gini) can be calculated. This shows the income inequality between a set of address (where 1 is high inequality and 0 is high equality)"
+    "We can look at the same metriics for Rainbow Bridge senders. Because we have the latest account balance of the senders, the [Gini coeffecient](https://github.com/oliviaguest/gini) can be calculated. This shows the income inequality between a set of address (where 1 is high inequality and 0 is high equality)."
 )
 g = gini(
     rainbow_by_address[rainbow_by_address.VARIABLE == "sender"]

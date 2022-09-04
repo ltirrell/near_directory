@@ -35,7 +35,7 @@ with st.expander("Methods"):
         x
 
 
-st.header("State of the Unions")
+st.header("State of the Union")
 # drop_inactive = st.checkbox("Remove inactive validators from analysis. NOTE: this is causing issues with data analysis and is being actively debugged, so it may not work...")
 
 blocktimes = get_blocktimes()
@@ -83,7 +83,7 @@ with st.expander("Defintions"):
     st.write(
         """
     - Nakamoto Coefficient: the minimum number of validators needed to control 33.3%% of the total staked NEAR and halt the network
-    - Gini Coefficient: a metric to quantify income inequality, see [here](https://github.com/oliviaguest/gini) for calculations and information
+    - Gini Coefficient: a metric to quantify income inequality, where 1 is high inequality and 0 is high equality. See [here](https://github.com/oliviaguest/gini) for calculations and information
     """
     )
 st.subheader("The Governors")

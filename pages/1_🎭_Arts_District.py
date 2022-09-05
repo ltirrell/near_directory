@@ -191,7 +191,7 @@ with st.expander("Methods"):
 
     The [top NFT projects](https://app.flipsidecrypto.com/velocity/queries/89c38bbf-9c3b-41d1-a92e-b12d4bdce055) and [overall sales volume](https://app.flipsidecrypto.com/velocity/queries/6ae95685-436d-4682-8d8b-dec364692ed9) are updated every 12 hours on Flipside, and are again borrowed from @pinehearst_'s [excellent work](https://app.flipsidecrypto.com/dashboard/near-arts-district-m8p1bd).
 
-    The [top NFT projects in the last 7 days](https://app.flipsidecrypto.com/velocity/queries/b14104c2-fc26-44fb-9be9-6573b3cf2c00) and [most expensive NFT sales](https://app.flipsidecrypto.com/velocity/queries/a35024bd-71b9-4548-a121-c284c2140fdb) are adapted from Discord user `Kaskoazul#4557`'s [dashboard](https://app.flipsidecrypto.com/dashboard/city-of-near-the-arts-district-3nBdeQ)
+    The [top NFT projects in the last 7 days](https://app.flipsidecrypto.com/velocity/queries/b14104c2-fc26-44fb-9be9-6573b3cf2c00) and [most expensive NFT sales](https://app.flipsidecrypto.com/velocity/queries/a35024bd-71b9-4548-a121-c284c2140fdb) are adapted from [@KaskCEA](https://twitter.com/KaskCEA)'s [dashboard](https://app.flipsidecrypto.com/dashboard/city-of-near-the-arts-district-3nBdeQ)
     """
 
 

@@ -259,7 +259,8 @@ c1.altair_chart(
         "Near User",
         "Number of Addresses Interacted With",
         "User metrics: Number of Addresses Interacted With",
-    )
+    ),
+    use_container_width=True,
 )
 c2.metric(
     "Average number of addresses interacted with",
@@ -276,7 +277,8 @@ c2.altair_chart(
         "Near User",
         "Number of Methods Used",
         title="User metrics: Number of Methods Used",
-    )
+    ),
+    use_container_width=True,
 )
 c1, c2 = st.columns([3, 1])
 c1.altair_chart(
@@ -285,7 +287,8 @@ c1.altair_chart(
         "Near Transaction Receiver",
         "Number of Users",
         title="Protocol Metrics: Number of Users Interacting with each protocol",
-    )
+    ),
+    use_container_width=True,
 )
 c2.metric(
     "Average Number of Users, per Protocol",
@@ -359,15 +362,15 @@ st.write(
 )
 
 
-c1, c2, c3 = st.columns([2, 1, 1])
+c1, c2 = st.columns([3, 1])
 all_user_chart = near.utils.alt_line_chart(user_data, "all_users").properties(
-    width=200, height=420
+    height=420
 )
 active_user_chart = near.utils.alt_line_chart(user_data, "active_users").properties(
-    width=200, height=420
+    height=420
 )
-combined = alt.hconcat(all_user_chart, active_user_chart)
-c1.altair_chart(combined, use_container_width=True)
+c1.altair_chart(all_user_chart, use_container_width=True)
+c1.altair_chart(active_user_chart, use_container_width=True)
 c2.metric("NEAR average daily users (past 90d)", f"{int(mean_90d.all_users['NEAR']):,}")
 c2.metric(
     "NEAR average daily users who are still active",
@@ -376,10 +379,10 @@ c2.metric(
 c2.metric(
     "NEAR average daily users (past 30d)", f"{int(mean_30d.active_users['NEAR']):,}"
 )
-c3.write("**Last 90 days (mean)**")
-c3.dataframe(mean_90d)
-c3.write("**Last 30 days (mean)**")
-c3.dataframe(mean_30d)
+c2.write("**Last 90 days (mean)**")
+c2.dataframe(mean_90d)
+c2.write("**Last 30 days (mean)**")
+c2.dataframe(mean_30d)
 
 
 """We can see the proporption of currently active users who were active 60-90 days ago on various blockchains, to get an idea of whether users have been interacting on chain for a longer period of time, or are newer to the ecosystem."""
@@ -397,17 +400,17 @@ st.subheader("Transaction data")
 st.write(
     "Additionally, we can do the same comparison with daily transaction counts across various blockchains, again divided between all users (from the past 90d) and focusing on users who are currently active (within the last 30d)"
 )
-c1, c2, c3 = st.columns([2, 1, 1])
+c1, c2 = st.columns([3, 1])
 all_user_tx_chart = near.utils.alt_line_chart(
     user_data,
     "all_users_tx",
-).properties(width=200, height=420)
+).properties(height=420)
 active_user_tx_chart = near.utils.alt_line_chart(
     user_data,
     "active_users_tx",
-).properties(width=200, height=420)
-combined_tx = alt.hconcat(all_user_tx_chart, active_user_tx_chart)
-c1.altair_chart(combined_tx, use_container_width=True)
+).properties(height=420)
+c1.altair_chart(all_user_tx_chart, use_container_width=True)
+c1.altair_chart(active_user_tx_chart, use_container_width=True)
 
 c2.metric(
     "NEAR average daily transaction count (past 90d)",
@@ -421,10 +424,10 @@ c2.metric(
     "NEAR average daily transaction count (past 30d)",
     f"{int(mean_30d_tx.active_users_tx['NEAR']):,}",
 )
-c3.write("**Last 90 days (mean)**")
-c3.dataframe(mean_90d_tx)
-c3.write("**Last 30 days (mean)**")
-c3.dataframe(mean_30d_tx)
+c2.write("**Last 90 days (mean)**")
+c2.dataframe(mean_90d_tx)
+c2.write("**Last 30 days (mean)**")
+c2.dataframe(mean_30d_tx)
 
 f"""
 The proportion of transactions from currently active users who were active 60-90 days ago on various blockchains is shown here:
@@ -444,17 +447,17 @@ st.subheader("Daily transactions per User")
 st.write(
     "Finally, let's compare the number of daily transactions per user, divided between all users (from the past 90d) and focusing on users who are currently active (within the last 30d)"
 )
-c1, c2, c3 = st.columns([2, 1, 1])
+c1, c2 = st.columns([2, 1])
 
 all_user_tx_per_user_chart = near.utils.alt_line_chart(
     user_data, "tx_per_all_users", log_scale=False
-).properties(width=200, height=420)
+).properties(height=420)
 active_user_tx_per_user_chart = near.utils.alt_line_chart(
     user_data, "tx_per_active_users", log_scale=False
-).properties(width=200, height=420)
-combined_tx = alt.hconcat(all_user_tx_per_user_chart, active_user_tx_per_user_chart)
+).properties(height=420)
 
-c1.altair_chart(combined_tx, use_container_width=True)
+c1.altair_chart(all_user_tx_per_user_chart, use_container_width=True)
+c1.altair_chart(active_user_tx_per_user_chart, use_container_width=True)
 c2.metric(
     "NEAR average daily transaction count per user (past 90d)",
     f"{mean_90d_tx_per_user.tx_per_all_users['NEAR']:.2f}",
@@ -467,10 +470,10 @@ c2.metric(
     "NEAR average daily transaction count (past 30d)",
     f"{mean_30d_tx_per_user.tx_per_active_users['NEAR']:.2f}",
 )
-c3.write("**Last 90 days (mean)**")
-c3.dataframe(mean_90d_tx_per_user)
-c3.write("**Last 30 days (mean)**")
-c3.dataframe(mean_30d_tx_per_user)
+c2.write("**Last 90 days (mean)**")
+c2.dataframe(mean_90d_tx_per_user)
+c2.write("**Last 30 days (mean)**")
+c2.dataframe(mean_30d_tx_per_user)
 
 
 with st.expander("Data tables"):

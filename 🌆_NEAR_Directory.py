@@ -24,7 +24,9 @@ Flip through the Directory here, or visit one of the landmarks for a tour of wha
 - [Validators: Local Government](Local_Government): a view of the NEAR politics, taking a closer look at its validators
 - [Crosschain/New Users: User Journey](User_Journey): an overview of how users start on the NEAR blockchain
 
-Data is provided by [Flipside Crypto](https://flipsidecrypto.xyz/) and other sources. See the Methods sections of each page for details.
+Data is provided by [Flipside Crypto](https://flipsidecrypto.xyz/) and other sources.
+See the Methods sections of each page for details.
+All code used to generate this dashboard is on [GitHub](https://github.com/ltirrell/near_directory).
     """
 )
 
